@@ -28,48 +28,6 @@ var objectCreator = function(objectType){
 
 d3.select("g").selectAll("circle").attr("class", "nodes");
 
-// animation function
-
-// var animateObject = function(list){
-//   var ballObject = objectCreator("circle");
-//   ballObject.attr("cy", bounceAxis(list[0][1] ) );
-//   var clone = list.slice();
-//   var recurse = function(list, delay){
-//     var first = list.shift();
-//     ballObject.transition()
-//       .duration(1000)
-//       .attr("cy", bounceAxis(first[1]) );
-//     
-
-//      setTimeout(function(){d3.select("#object").data(list).exit().remove();}, 3000)
-//     // d3.select("#object").on("end", function(){console.log("hello")})
-//     if(list.length > 0){
-//       recurse(list);
-//     }      
-//   };    
-//   recurse(clone);
-// };
-
-// setInterval(function(){
-//   animateObject(points);
-// }, 1000);
-
-
-
-// var value;
-// var ran = false;
-// var ballObject = objectCreator("circle");
-// ballObject.attr("cy", function(d){
-//   value = d.shift(); 
-//   return bounceAxis( value );
-// });
-
-// ballObject.transition().duration(1000).attr("cy", function(d){
-//     value = d.shift(); 
-//       return bounceAxis( value );
-//   }).each("end", function(){console.log("fuck");});
-
-
 setInterval(function(){
   ballObject = objectCreator("circle");
   ballObject.style("visibility", function(d,i){
@@ -80,7 +38,7 @@ setInterval(function(){
     } 
   });
   ballObject.transition()
-    .duration(200)
+    .duration(400)
     .ease("linear")
     .delay(function(d, i){ return i * 50;})
     .attr("cy", function(d, i){
@@ -97,10 +55,12 @@ setInterval(function(){
       d3.select(this).remove();
     })
     .delay(function(d, i){ 
-      return i * 200;
+      return i * 400;
     })
     .style("visibility", "visible");
 },2000);
+
+
 
 
 
