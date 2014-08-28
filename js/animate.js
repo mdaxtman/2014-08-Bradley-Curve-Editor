@@ -1,4 +1,5 @@
 //create an svg element
+var bounceAxis = scaler([25, 275], [0,300]);
 var svgElem = d3.select("#ballWrapper")
                 .append("svg")
                 .attr("height", "300px")

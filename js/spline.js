@@ -8,7 +8,7 @@ var scaler = function(rangeArray, domainArray){
 };
 var xScale = scaler([0, width]);
 var yScale = scaler([height, 0]);
-var bounceAxis = scaler([25, 275], [0,300]);
+
 
 //graph points hashing distance and time
 var axisCreator = function(inputScale, orientation){
