@@ -1,55 +1,57 @@
-// var margin = {top: 20, right: 20, bottom: 30, left: 40};
-
-
 var width = 600,
     height = 300;
 
 //scaled x and y vertices of graph to equal 0 - 1 for both axes
-var xScale = d3.scale.linear().domain([0, 1]).range([0, width]);
-var yScale = d3.scale.linear().domain([0, 1]).range([height, 0]);
-///////
+var scaler = function(rangeArray, domainArray){
+ domainArray = domainArray || [0, 1];
+ return d3.scale.linear().domain(domainArray).range(rangeArray);
+};
+var xScale = scaler([0, width]);
+var yScale = scaler([height, 0]);
+var bounceAxis = scaler([25, 275], [0,300]);
 
 //graph points hashing distance and time
-var xAxis = d3.svg.axis()
-    .scale(xScale)
-    .orient("bottom");
+var axisCreator = function(inputScale, orientation){
+ return d3.svg.axis()
+          .scale(inputScale)
+          .orient(orientation);
+};
+var xAxis = axisCreator(xScale, "bottom");
+var yAxis = axisCreator(yScale, "left");
+yAxis = yAxis.ticks(10, "%");
 
-var yAxis = d3.svg.axis()
-    .scale(yScale)
-    .orient("left")
-    .ticks(10, "%");
-////////////
 
 //creation of default nodes upon page load and assignment of position on the graph
-var points = d3.range(1, 3).map(function(i) {
-  return [(i * width / 5), (height-(i*50)) ];
-});
-//////////
+var pointNumber = function(num){
+ return d3.range(0, num).map(function(i) {
+   return [(i * width / 5), (height-(i*50)) ];
+  });
+};
+var points = pointNumber(6);
 
-//recent edits
-var object = d3.select("#ballWrapper").append("svg")
-  .attr("height", "300px")
-  .attr("width", "140px")
-  .append("circle")
-  .attr("cx", 25)
-  .attr("r", 20);
+//create an svg element
+var svgElem = d3.select("#ballWrapper")
+                .append("svg")
+                .attr("height", "300px")
+                .attr("width", "140px");
+  
+//create an object to bounce in svg with fixed cx position
+var objectCreator = function(objectType){
+  return svgElem.append(objectType)
+                .attr("cx", 25)
+                .attr("r", 20);
+};
+var ballObject = objectCreator("circle");
 
-var bounceAxis = d3.scale.linear().domain([0,300]).range([25, 275]);
-
+////will be erased for test purposes only
 setInterval(function(){
-  object.attr("cy", function(){
+  ballObject.attr("cy", function(){
     var height = bounceAxis( points[0][1]);
     return height;
   }); 
 },1000);
 
 ///////////////////////
-
-var dragged = null;
-
-//the selected or previously selected point on the line
-var selected = points[0];
-///////////
 
 var line = d3.svg.line();
 
@@ -91,6 +93,11 @@ d3.select("#interpolate")
     .text(function(d) { return d; });
 
 graph.node().focus();
+
+var dragged = null;
+//the selected or previously selected point on the line
+var selected = points[0];
+
 
 function redraw() {
   graph.select("path").attr("d", line);
