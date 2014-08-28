@@ -1,11 +1,15 @@
-
 // var margin = {top: 20, right: 20, bottom: 30, left: 40};
+
+
 var width = 600,
     height = 300;
 
-var xScale = d3.scale.linear().domain([0, 600]).range([0, width]);
+//scaled x and y vertices of graph to equal 0 - 1 for both axes
+var xScale = d3.scale.linear().domain([0, 1]).range([0, width]);
 var yScale = d3.scale.linear().domain([0, 1]).range([height, 0]);
+///////
 
+//graph points hashing distance and time
 var xAxis = d3.svg.axis()
     .scale(xScale)
     .orient("bottom");
@@ -14,13 +18,20 @@ var yAxis = d3.svg.axis()
     .scale(yScale)
     .orient("left")
     .ticks(10, "%");
+////////////
 
-var points = d3.range(1, 5).map(function(i) {
-  return [(i * width / 8), (height-(i*50)) ];
+//creation of default nodes upon page load and assignment of position on the graph
+var points = d3.range(1, 3).map(function(i) {
+  return [(i * width / 5), (height-(i*50)) ];
 });
+//////////
+
 
 var dragged = null;
+
+//the selected or previously selected point on the line
 var selected = points[0];
+///////////
 
 var line = d3.svg.line();
 
@@ -40,17 +51,6 @@ var curve = graph.append("path")
     .attr("class", "line")
     .attr("id", "animCurve")
     .call(redraw);
-
-var verticalLine = graph.append('line')
-// .attr('transform', 'translate(100, 50)')
-.attr({
-    'x1': 0,
-    'y1': 0,
-    'x2': 0,
-    'y2': height
-})
-    .attr("stroke", "steelblue")
-    .attr('class', 'verticalLine');
 
 d3.select(window)
     .on("mousemove", mousemove)
@@ -121,6 +121,12 @@ function mousemove() {
 
 var regEx = /[A-Z]/gi;
 
+var roundIt = function(number) {
+  number = number * 100;
+  number = Math.round(number);
+  return number / 100 ;
+};
+
 function mouseup() {
   if (!dragged) return;
   mousemove();
@@ -145,8 +151,10 @@ function mouseup() {
     var curveLength = curve.node().getTotalLength();
     console.log("curveLength is: " + curveLength);
 
-    for (var sIndex = 0; sIndex < 4; sIndex++ ) {
-      var initX = curvePoints[1]+((xDistance/3)*sIndex);
+    d3.select('#cssData').selectAll("p").remove();
+
+    for (var sIndex = 0; sIndex < 9; sIndex++ ) {
+      var initX = curvePoints[1]+((xDistance/8)*sIndex);
       var start = initX;
       var end = curveLength;
       var target;
@@ -163,10 +171,14 @@ function mouseup() {
           else if (pos.x < initX) start = target;
           else break; //position found
       }
-      // console.log("x / y intersect graph: " + [pos.x, pos.y]);
-      console.log("data intersect graph: " + [xScale.invert(pos.x), yScale.invert(pos.y)]);
-    }
 
+      var roundX = roundIt(xScale.invert(pos.x));
+      var roundY = roundIt(yScale.invert(pos.y));
+      console.log("x / y intersect graph: " + [pos.x, pos.y]);
+      console.log("data intersect graph: " + [xScale.invert(pos.x), yScale.invert(pos.y)]);
+      d3.select('#cssData').append("p").text(roundX+", "+ roundY);
+    }
+   
   }
 }
 
@@ -183,3 +195,8 @@ function keydown() {
     }
   }
 }
+
+// function updateAnim() {
+//   document.getElementById('ball').style.webkitAnimationName = "none";
+// }
+
