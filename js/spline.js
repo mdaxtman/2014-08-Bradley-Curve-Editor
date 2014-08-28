@@ -82,6 +82,8 @@ function redraw() {
   var circle = graph.selectAll("circle")
       .data(points, function(d) { return d; });
 
+  circle.attr("class", "nodes")
+
   circle.enter().append("circle")
       .attr("r", 1e-6)
       .on("mousedown", function(d) { selected = dragged = d; redraw(); })
