@@ -26,6 +26,24 @@ var points = d3.range(1, 3).map(function(i) {
 });
 //////////
 
+//recent edits
+var object = d3.select("#ballWrapper").append("svg")
+  .attr("height", "300px")
+  .attr("width", "140px")
+  .append("circle")
+  .attr("cx", 25)
+  .attr("r", 20);
+
+var bounceAxis = d3.scale.linear().domain([0,300]).range([25, 275]);
+
+setInterval(function(){
+  object.attr("cy", function(){
+    var height = bounceAxis( points[0][1]);
+    return height;
+  }); 
+},1000);
+
+///////////////////////
 
 var dragged = null;
 
@@ -174,8 +192,8 @@ function mouseup() {
 
       var roundX = roundIt(xScale.invert(pos.x));
       var roundY = roundIt(yScale.invert(pos.y));
-      console.log("x / y intersect graph: " + [pos.x, pos.y]);
-      console.log("data intersect graph: " + [xScale.invert(pos.x), yScale.invert(pos.y)]);
+      // console.log("x / y intersect graph: " + [pos.x, pos.y]);
+      // console.log("data intersect graph: " + [xScale.invert(pos.x), yScale.invert(pos.y)]);
       d3.select('#cssData').append("p").text(roundX+", "+ roundY);
     }
    

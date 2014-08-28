@@ -332,7 +332,7 @@ circle {
   height: 40px;
   border-radius: 20px;
   background: rgb(187,187,187);
-  position: relative;
+  /*position: relative;*/
   /*-webkit-animation-duration: 2s;
   -webkit-animation-iteration-count: infinite;
   -webkit-animation-timing-function: linear;
