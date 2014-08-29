@@ -27,7 +27,7 @@ var pointNumber = function(num){
    return [(i * width / 5), (height-(i*50)) ];
   });
 };
-var points = pointNumber(5);
+var points = pointNumber(2);
 
 var line = d3.svg.line();
 
@@ -81,8 +81,6 @@ function redraw() {
 
   var circle = graph.selectAll("circle")
       .data(points, function(d) { return d; });
-
-  circle.attr("class", "nodes")
 
   circle.enter().append("circle")
       .attr("r", 1e-6)

@@ -1,5 +1,6 @@
 //create an svg element
 var bounceAxis = scaler([25, 275], [0,300]);
+var timeScale = scaler([0,2000],[0,600]);
 var svgElem = d3.select("#ballWrapper")
                 .append("svg")
                 .attr("height", "300px")
@@ -25,10 +26,31 @@ var objectCreator = function(objectType){
                 .attr("id", "object");
 };
 //create ball object to animate
+var nodes = d3.select("g").selectAll("circle").attr("class", "nodes");
+var time = [];
 
-d3.select("g").selectAll("circle").attr("class", "nodes");
+var drag = d3.behavior.drag()
+  .on("drag", function(d, i){
+    console.log("should be smaller", d[0]);
+    console.log("should be bigger", time[i+1]);
+    if(d[0] > time[i + 1]){
+      d[0] = time[i + 1];
+    }
+    if(d[0] < time[i - 1]){
+      d[0] = time[i - 1];
+    }  
+    d3.selectAll(".nodes")
+      .attr("cx", function(d){
+        return d[0];
+      });
+  });
+d3.selectAll(".nodes").call(drag);
 
 setInterval(function(){
+  time = [];
+  points.forEach(function(val){
+    time.push(val[0]);
+  });
   ballObject = objectCreator("circle");
   ballObject.style("visibility", function(d,i){
     if(i === 0){
@@ -37,12 +59,12 @@ setInterval(function(){
       return "hidden";
     } 
   });
-  ballObject.transition()
-    .duration(400)
+var animationLapse = (timeScale( time[1] ) - timeScale( time[0]) );
+  var t0 = ballObject.transition()
+    .duration(animationLapse)
     .ease("linear")
-    .delay(function(d, i){ return i * 50;})
+    //.delay(function(d, i){ return i * 50;})
     .attr("cy", function(d, i){
-      console.log(points);
       if(points[i+1] !== undefined){
         var val = points[i + 1][1]; 
         return bounceAxis(val);
@@ -52,10 +74,12 @@ setInterval(function(){
       //|| points[i][1];
     })
     .each("end", function(d, i){
+      animationLapse = timeScale(time[i+1]) - timeScale(time[i]);
+  console.log(animationLapse);
       d3.select(this).remove();
     })
     .delay(function(d, i){ 
-      return i * 400;
+      return i * animationLapse;
     })
     .style("visibility", "visible");
 },2000);
