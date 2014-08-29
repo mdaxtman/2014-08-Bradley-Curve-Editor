@@ -1,5 +1,5 @@
-var width = 600,
-    height = 300;
+var width = 601,
+    height = 301;
 
 //scaled x and y vertices of graph to equal 0 - 1 for both axes
 var scaler = function(rangeArray, domainArray){
@@ -36,6 +36,28 @@ var graph = d3.select("#curveEditor").append("svg")
     .attr("height", height)
   .append("g")
     ;
+
+// Adds a grid to the graph
+for (var j = 0; j <= height; j += 10) {
+  graph.append("svg:line")
+    .attr("x1", 0)
+    .attr("y1", j)
+    .attr("x2", width)
+    .attr("y2", j)
+    .style("stroke", "rgb(6,120,155)")
+    .style("opacity", 0.5)
+    .style("stroke-width", 1);
+};
+for (var j = 0; j <= width; j += 10) {
+  graph.append("svg:line")
+    .attr("x1", j)
+    .attr("y1", 0)
+    .attr("x2", j)
+    .attr("y2", height)
+    .style("stroke", "rgb(6,120,155)")
+    .style("opacity", 0.5)
+    .style("stroke-width", 1);
+};
 
 graph.append("rect")
     .attr("width", width)
