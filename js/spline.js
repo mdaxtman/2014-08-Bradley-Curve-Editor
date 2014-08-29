@@ -27,7 +27,7 @@ var pointNumber = function(num){
    return [(i * width / 5), (height-(i*50)) ];
   });
 };
-var points = pointNumber(2);
+var points = pointNumber(5);
 
 var line = d3.svg.line();
 
